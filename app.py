@@ -1,22 +1,25 @@
-from flask import Flask, render_template, request
+from flask import Flask, request, jsonify, render_template
 import pickle
-import os
 
 app = Flask(__name__)
 
-# Load model and vectorizer
-model = pickle.load(open('model.pkl', 'rb'))
-vectorizer = pickle.load(open('vectorizer.pkl', 'rb'))
+# Load model
+with open('model.pkl', 'rb') as f:
+    model = pickle.load(f)
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def home():
-    prediction = ""
-    if request.method == 'POST':
-        product_name = request.form['product']
-        product_vec = vectorizer.transform([product_name])
-        prediction = model.predict(product_vec)[0]
-    return render_template('index.html', prediction=prediction)
+    return render_template('index.html')
 
-if __name__ == '_main_':
-    port = int(os.environ.get("PORT", 8080))
-    app.run(host='0.0.0.0', port=port)
+@app.route('/predict', methods=['POST'])
+def predict():
+    data = request.get_json()
+    text = data.get('text', '')
+    if not text:
+        return jsonify({'error': 'No text provided'})
+
+    prediction = model.predict([text])[0]
+    return jsonify({'category': prediction})
+
+if __name__ == '__main__':
+    app.run(debug=True)
