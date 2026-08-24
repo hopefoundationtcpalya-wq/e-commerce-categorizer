@@ -1,9 +1,9 @@
 # E-Commerce Product Categorizer AI
 
-### What it does
-Enter product name → AI predicts category like Electronics, Clothing, Groceries
+AI app that predicts product category like Electronics, Clothing, Groceries.
 
-### How to Run
-1. pip install -r requirements.txt
-2. python app.py
-3. Open http://127.0.0.1:8080 in browser
+## What it does
+Enter product name -> AI predicts category
+Example: nike shoes -> clothing, iphone 15 -> electronics, milk -> groceries
+
+#
