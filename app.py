@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, render_template
 import pickle
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 # Load model
 with open('model.pkl', 'rb') as f:
@@ -32,5 +32,5 @@ def predict():
     else:
         return render_template('index.html', prediction_text=f"Predicted Category: {prediction}", input_text=text)
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     app.run(debug=True)
