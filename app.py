@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 import pickle
 import os
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 # Load model and vectorizer
 model = pickle.load(open('model.pkl', 'rb'))
@@ -17,6 +17,6 @@ def home():
         prediction = model.predict(product_vec)[0]
     return render_template('index.html', prediction=prediction)
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port)
