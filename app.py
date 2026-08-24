@@ -7,19 +7,27 @@ app = Flask(__name__)
 with open('model.pkl', 'rb') as f:
     model = pickle.load(f)
 
-@app.route('/')
-def home():
-    return render_template('index.html')
-
 @app.route('/predict', methods=['POST'])
 def predict():
-    data = request.get_json()
-    text = data.get('text', '')
+    # Accept both JSON and form data
+    if request.is_json:
+        data = request.get_json()
+        text = data.get('text', '')
+    else:
+        text = request.form.get('text', '') or request.form.get('description', '') or request.form.get('product', '')
+
     if not text:
-        return jsonify({'error': 'No text provided'})
+        # Try to get first form value if keys are different
+        if request.form:
+            text = list(request.form.values())[0]
+
+    if not text:
+        return render_template('index.html', prediction_text="Please enter product description", input_text="")
 
     prediction = model.predict([text])[0]
-    return jsonify({'category': prediction})
 
-if __name__ == '__main__':
-    app.run(debug=True)
+    # If request is JSON, return JSON, else return HTML page
+    if request.is_json:
+        return jsonify({'category': prediction})
+    else:
+        return render_template('index.html', prediction_text=f"Predicted Category: {prediction}", input_text=text)
