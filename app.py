@@ -1,14 +1,15 @@
 from flask import Flask, request, jsonify, render_template
 import pickle
 
-app = Flask(__name__)
+app = Flask(_name_)
 
 # Load model
 with open('model.pkl', 'rb') as f:
     model = pickle.load(f)
- @app.route('/')
+
+@app.route('/')
 def home():
-    return render_temolate('index.html')
+    return render_template('index.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -18,10 +19,7 @@ def predict():
         text = data.get('text', '')
     else:
         text = request.form.get('text', '') or request.form.get('description', '') or request.form.get('product', '')
-
-    if not text:
-        # Try to get first form value if keys are different
-        if request.form:
+        if not text and request.form:
             text = list(request.form.values())[0]
 
     if not text:
@@ -29,8 +27,10 @@ def predict():
 
     prediction = model.predict([text])[0]
 
-    # If request is JSON, return JSON, else return HTML page
     if request.is_json:
         return jsonify({'category': prediction})
     else:
         return render_template('index.html', prediction_text=f"Predicted Category: {prediction}", input_text=text)
+
+if _name_ == '_main_':
+    app.run(debug=True)
