@@ -1,0 +1,12 @@
+# 🛒 E-Commerce Product Categorizer AI
+
+AI model that predicts product category from product name.
+
+*Live Demo:* https://e-commerce-categorizer.onrender.com
+
+*Tech:* Python, Flask, Scikit-learn, Render
+
+*How to use:*
+1. Enter product name e.g. "iphone 15, nike shoes"
+2. Click Predict Category
+3. AI shows category
